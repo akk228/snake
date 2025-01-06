@@ -1,24 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { Intro } from './Game/Intro/Intro';
+import { IFieldParameters, initialState } from './Game/Field';
+import IGameModel from './Game/Model';
+import { Level } from './Game/Enums/Level';
 
 function App() {
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [game, setGame] = useState<IGameModel>({ fieldConfigs: initialState, snakeSpeed: 500, difficulty: Level.Easy });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Snake game</h1>
+      <Intro
+        gameStarted={gameStarted}
+        onGameStartedChange={setGameStarted}
+        gameConfigs={game}
+        onGameConfigsChange={setGame}
+      />
     </div>
   );
 }

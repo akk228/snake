@@ -1,4 +1,3 @@
-import type { Action, ThunkAction } from '@reduxjs/toolkit';
 import { configureStore } from "@reduxjs/toolkit";
 import { gameSlice } from "./GameSlice";
 

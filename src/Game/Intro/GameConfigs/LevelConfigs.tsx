@@ -1,13 +1,15 @@
 import { JsxElement } from "typescript";
 import { Level } from "../../Enums/Level";
 import React, { useState } from "react";
+import { useGameDispatch, useGameSelector } from "../../Redux/GameHooks";
+import { selectDifficulty } from "../../Redux/GameSelectors";
+import { changeDifficulty } from "../../Redux/GameSlice";
 
-interface ILevelConfigProps {
-    difficulty: Level
-    onChange: (val: Level) => void;
-}
-export function LevelConfigs(props: ILevelConfigProps): JSX.Element {
-    const onLevelChange = (val: React.ChangeEvent<HTMLInputElement>) => props.onChange(parseInt(val.target.value));
+export function LevelConfigs(): JSX.Element {
+    const gameLevel = useGameSelector(selectDifficulty);
+    const dispatch = useGameDispatch();
+
+    const onLevelChange = (val: React.ChangeEvent<HTMLInputElement>) => dispatch(changeDifficulty(parseInt(val.target.value)));
 
     const renderDifficulty = () => {
         const levels: Level[] = [Level.Easy, Level.Medium, Level.FuckHard];
@@ -21,7 +23,7 @@ export function LevelConfigs(props: ILevelConfigProps): JSX.Element {
                     type="radio"
                     id={`level-${level}`}
                     value={level}
-                    checked={props.difficulty === level}
+                    checked={gameLevel === level}
                     onChange={onLevelChange}>
                 </input>
             </div>));

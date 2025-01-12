@@ -2,12 +2,10 @@ import React from "react";
 import { IFieldParameters } from "../Field";
 import { StartButton } from "../ControlButtons/StartButton";
 import { GameConfigs } from "./GameConfigs";
-import IGameModel from "../Model";
+import { IGameModel } from "../Model";
 
 interface IIntroProps {
     gameStarted: boolean,
-    gameConfigs: IGameModel,
-    onGameConfigsChange: (val: IGameModel) => void,
     onGameStartedChange: (val: boolean) => void
 }
 
@@ -23,10 +21,7 @@ export function Intro(props: IIntroProps): JSX.Element {
                 <StartButton
                     onStart={() => props.onGameStartedChange(true)}
                 />
-                <GameConfigs
-                    gameConfigs={props.gameConfigs}
-                    onGameConfigsChange={props.onGameConfigsChange}
-                />
+                <GameConfigs />
             </>);
     }
 

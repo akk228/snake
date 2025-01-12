@@ -1,10 +1,12 @@
 import { Level } from "./Enums/Level";
-import { IFieldParameters } from "./Field";
+import { IFieldParameters, initialState } from "./Field";
 
-interface IGameModel {
+export interface IGameModel {
     fieldConfigs: IFieldParameters,
-    snakeSpeed: number,
     difficulty: Level
 }
 
-export default IGameModel;
+export const gameInitialState: IGameModel = {
+    fieldConfigs: initialState,
+    difficulty: Level.Easy,
+};

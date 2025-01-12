@@ -1,25 +1,26 @@
 import React, { useState } from "react";
 import { IFieldParameters } from "../../Field";
-
-interface IFieldConfigsProps {
-    field: IFieldParameters,
-    onChange: (val: IFieldParameters) => void
-}
+import { useGameDispatch, useGameSelector } from "../../Redux/GameHooks";
+import { changeHeight, changeWidth } from "../../Redux/GameSlice";
+import { selectFieldConfigs } from "../../Redux/GameSelectors";
 
 /**
  * Input form for field configurations
  * @param props 
  * @returns 
  */
-export function FieldConfigs(props: IFieldConfigsProps): JSX.Element {
+export function FieldConfigs(): JSX.Element {
+    const disaptch = useGameDispatch();
+    const fieldConfigs = useGameSelector(selectFieldConfigs);
+
     function onHeightChange(event: React.ChangeEvent<HTMLInputElement>) {
         const height: number = parseInt(event.target.value);
-        props.onChange({...props.field, height: height});
+        disaptch(changeHeight(height));
     }
 
     function onWidthChange(event: React.ChangeEvent<HTMLInputElement>) {
         const width: number = parseInt(event.target.value);
-        props.onChange({...props.field, width: width});
+        disaptch(changeWidth(width));
     }
 
     return (
@@ -28,7 +29,7 @@ export function FieldConfigs(props: IFieldConfigsProps): JSX.Element {
             <br/>
             <input
                 type="number"
-                value={props.field.height}
+                value={fieldConfigs.height}
                 onChange={onHeightChange}>
             </input>
             <br/>
@@ -36,7 +37,7 @@ export function FieldConfigs(props: IFieldConfigsProps): JSX.Element {
             <br/>
             <input
                 type="number"
-                value={props.field.width}
+                value={fieldConfigs.width}
                 onChange={onWidthChange}>
             </input>
             <br/>

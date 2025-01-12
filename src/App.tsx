@@ -1,23 +1,27 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Intro } from './Game/Intro/Intro';
-import { IFieldParameters, initialState } from './Game/Field';
-import IGameModel from './Game/Model';
+import { initialState } from './Game/Field';
+import { IGameModel } from './Game/Model';
 import { Level } from './Game/Enums/Level';
+import { Provider, useSelector } from 'react-redux';
+import { gameStore } from './Game/Redux/GameStore';
+import { Play } from './Game/Play/Play';
+
 
 function App() {
   const [gameStarted, setGameStarted] = useState<boolean>(false);
-  const [game, setGame] = useState<IGameModel>({ fieldConfigs: initialState, snakeSpeed: 500, difficulty: Level.Easy });
 
   return (
-    <div>
-      <h1>Snake game</h1>
-      <Intro
-        gameStarted={gameStarted}
-        onGameStartedChange={setGameStarted}
-        gameConfigs={game}
-        onGameConfigsChange={setGame}
-      />
-    </div>
+    <Provider store={gameStore}>
+      <div>
+        <h1>Snake game</h1>
+        <Intro
+          gameStarted={gameStarted}
+          onGameStartedChange={setGameStarted}
+        />
+        <Play />
+      </div>
+    </Provider>
   );
 }
 

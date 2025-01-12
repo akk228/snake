@@ -15,15 +15,15 @@ interface IIntroProps {
  * @returns 
  */
 export function Intro(props: IIntroProps): JSX.Element {
-    function renderIntro(): JSX.Element {
-        return (
-            <>
-                <StartButton
-                    onStart={() => props.onGameStartedChange(true)}
-                />
-                <GameConfigs />
-            </>);
+    if (props.gameStarted) {
+        return <></>;
     }
-
-    return props.gameStarted ? <></> : renderIntro();
-}
+    
+    return (
+        <>
+            <StartButton
+                onStart={() => props.onGameStartedChange(true)}
+            />
+            <GameConfigs />
+        </>);
+    }

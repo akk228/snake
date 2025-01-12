@@ -10,12 +10,12 @@ function App() {
 
   return (
     <Provider store={gameStore}>
-        <h1>Snake game</h1>
-        <Intro
-          gameStarted={gameStarted}
-          onGameStartedChange={setGameStarted}
-        />
-        <Play />
+      <h1>Snake game</h1>
+      <Intro
+        gameStarted={gameStarted}
+        onGameStartedChange={setGameStarted}
+      />
+      <Play />
     </Provider>
   );
 }

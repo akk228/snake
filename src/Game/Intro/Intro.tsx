@@ -2,7 +2,7 @@ import React from "react";
 import { IFieldParameters } from "../Entities/Field";
 import { StartButton } from "../../GlobalElements/UI/Buttons/StartButton";
 import { GameConfigs } from "./GameConfigs";
-import { IGameModel } from "../Entities/Model";
+import { IGameModel } from "../Entities/Game";
 
 interface IIntroProps {
     gameStarted: boolean,

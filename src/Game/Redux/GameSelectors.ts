@@ -1,4 +1,4 @@
-import { IGameModel } from "../Model";
+import { IGameModel } from "../Entities/Model";
 import { GameStateType } from "./GameStore";
 
 export const selectFieldConfigs = (state: GameStateType) => state.fieldConfigs;

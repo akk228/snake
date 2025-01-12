@@ -1,5 +1,5 @@
 import { JsxElement } from "typescript";
-import { Level } from "../../Enums/Level";
+import { Level } from "../../Entities/Enums/Level";
 import React, { useState } from "react";
 import { useGameDispatch, useGameSelector } from "../../Redux/GameHooks";
 import { selectDifficulty } from "../../Redux/GameSelectors";

@@ -11,7 +11,7 @@ interface IIntroProps {
 
 /**
  * Form that opens before starting the game, that is used to set game parameters, and start the game
- * @param props IFieldParameters
+ * @param props
  * @returns 
  */
 export function Intro(props: IIntroProps): JSX.Element {
@@ -19,11 +19,11 @@ export function Intro(props: IIntroProps): JSX.Element {
         return <></>;
     }
     
+    const onStart = () => props.onGameStartedChange(true);
+
     return (
         <>
-            <StartButton
-                onStart={() => props.onGameStartedChange(true)}
-            />
+            <StartButton onStart={onStart} />
             <GameConfigs />
         </>);
     }

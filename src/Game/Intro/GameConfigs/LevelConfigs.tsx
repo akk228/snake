@@ -1,33 +1,25 @@
-import { JsxElement } from "typescript";
 import { Level } from "../../Entities/Enums/Level";
-import React, { useState } from "react";
 import { useGameDispatch, useGameSelector } from "../../Redux/GameHooks";
 import { selectDifficulty } from "../../Redux/GameSelectors";
 import { changeDifficulty } from "../../Redux/GameSlice";
+import { Levels } from "../../Entities/Constants/Levels";
+import { IRadioValue, RadioButton } from "../../../GlobalElements/UI/Inputs/RadioButton";
 
 export function LevelConfigs(): JSX.Element {
     const gameLevel = useGameSelector(selectDifficulty);
+    const levels: IRadioValue[] = Levels.map((level: Level): IRadioValue => ({
+        label: { 
+            text: Level[level],
+            key: level
+        },
+        value: level
+    }));
     const dispatch = useGameDispatch();
+    const onLevelChange = (level: Level) => dispatch(changeDifficulty(level));
 
-    const onLevelChange = (val: React.ChangeEvent<HTMLInputElement>) => dispatch(changeDifficulty(parseInt(val.target.value)));
-
-    const renderDifficulty = () => {
-        const levels: Level[] = [Level.Easy, Level.Medium, Level.FuckHard];
-
-        return levels.map((level: Level): React.ReactElement => (
-            <div key={`difficultyLevel-${level}`}>
-                <label htmlFor={`level-${level}`}>
-                    <code>{Level[level]}</code>
-                </label>
-                <input
-                    type="radio"
-                    id={`level-${level}`}
-                    value={level}
-                    checked={gameLevel === level}
-                    onChange={onLevelChange}>
-                </input>
-            </div>));
-    };
-
-    return(<form>{renderDifficulty()}</form>);
+    return <RadioButton
+                selected={gameLevel}
+                values={levels}
+                onChange={onLevelChange}
+            />;
 }

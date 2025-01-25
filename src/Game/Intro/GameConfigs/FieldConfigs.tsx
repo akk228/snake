@@ -29,5 +29,6 @@ export function FieldConfigs(): JSX.Element {
                 value={fieldConfigs.width}
                 onChange={onWidthChange}
             />
-        </>);
+        </>
+    );
 }

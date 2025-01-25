@@ -11,5 +11,6 @@ export function Play(): JSX.Element {
             <p>Height: {field.height}</p>
             <p>Width: {field.width}</p>
             <p>Level: <code>{Level[difficulty]}</code></p>
-        </div>);
+        </div>
+    );
 }

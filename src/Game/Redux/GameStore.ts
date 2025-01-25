@@ -6,7 +6,7 @@ export const gameStore = configureStore({
     reducer: gameSlice.reducer
 });
 
-// export types for selectoprs
+// export types for selectors
 export type GameType = typeof gameStore;
 export type GameStateType = ReturnType<GameType['getState']>;
 export type GameDisaptch = GameType['dispatch'];

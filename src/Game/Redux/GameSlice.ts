@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { gameInitialState, IGameModel } from "../Entities/Game";
 import { Level } from "../Entities/Enums/Level";
 
-// two components missing
 export const gameSlice = createSlice({
     name: "SnakeGame",
     initialState: gameInitialState,

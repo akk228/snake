@@ -1,8 +1,5 @@
-import React from "react";
-import { IFieldParameters } from "../Entities/Field";
-import { StartButton } from "../../GlobalElements/UI/Buttons/StartButton";
+import { SubmitButton } from "../../GlobalElements/UI/Buttons/SubmitButton";
 import { GameConfigs } from "./GameConfigs";
-import { IGameModel } from "../Entities/Game";
 
 interface IIntroProps {
     gameStarted: boolean,
@@ -15,15 +12,16 @@ interface IIntroProps {
  * @returns 
  */
 export function Intro(props: IIntroProps): JSX.Element {
-    if (props.gameStarted) {
-        return <></>;
-    }
+    if (props.gameStarted) return <></>;
     
     const onStart = () => props.onGameStartedChange(true);
 
     return (
         <>
-            <StartButton onStart={onStart} />
+            <SubmitButton
+                text={"Go!"}
+                onClick={onStart} />
             <GameConfigs />
-        </>);
-    }
+        </>
+    );
+}

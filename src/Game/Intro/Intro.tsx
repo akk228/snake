@@ -1,5 +1,6 @@
 import { SubmitButton } from "../../GlobalElements/UI/Buttons/SubmitButton";
-import { GameConfigs } from "./GameConfigs";
+import { FieldConfigs } from "./GameConfigs/FieldConfigs";
+import { LevelConfigs } from "./GameConfigs/LevelConfigs";
 
 interface IIntroProps {
     gameStarted: boolean,
@@ -21,7 +22,8 @@ export function Intro(props: IIntroProps): JSX.Element {
             <SubmitButton
                 text={"Go!"}
                 onClick={onStart} />
-            <GameConfigs />
+            <FieldConfigs />
+            <LevelConfigs />
         </>
     );
 }

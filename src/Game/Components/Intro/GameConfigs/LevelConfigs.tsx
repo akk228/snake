@@ -1,9 +1,9 @@
-import { Level } from "../../Entities/Enums/Level";
-import { useGameDispatch, useGameSelector } from "../../Redux/GameHooks";
-import { selectDifficulty } from "../../Redux/GameSelectors";
-import { changeDifficulty } from "../../Redux/GameSlice";
-import { Levels } from "../../Entities/Constants/Levels";
-import { IRadioValue, RadioButton } from "../../../GlobalElements/UI/Inputs/RadioButton";
+import { Level } from "../../../Entities/Enums/Level";
+import { useGameDispatch, useGameSelector } from "../../../Redux/GameHooks";
+import { selectDifficulty } from "../../../Redux/GameSelectors";
+import { changeDifficulty } from "../../../Redux/GameSlice";
+import { Levels } from "../../../Entities/Constants/Levels";
+import { IRadioValue, RadioButton } from "../../../../GlobalElements/UI/Inputs/RadioButton";
 
 export function LevelConfigs(): JSX.Element {
     const gameLevel = useGameSelector(selectDifficulty);

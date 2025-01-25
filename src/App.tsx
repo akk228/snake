@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Intro } from './Game/Intro/Intro';
+import { Intro } from './Game/Components/Intro/Intro';
 import { Provider } from 'react-redux';
 import { gameStore } from './Game/Redux/GameStore';
-import { Play } from './Game/Play/Play';
+import { Play } from './Game/Components/Play/Play';
 
 
 function App() {

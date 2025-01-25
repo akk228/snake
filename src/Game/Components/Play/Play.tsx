@@ -1,6 +1,6 @@
-import { useGameSelector } from "../Redux/GameHooks";
-import { selectDifficulty, selectFieldConfigs } from "../Redux/GameSelectors";
-import { Level } from "../Entities/Enums/Level";
+import { useGameSelector } from "../../Redux/GameHooks";
+import { selectDifficulty, selectFieldConfigs } from "../../Redux/GameSelectors";
+import { Level } from "../../Entities/Enums/Level";
 
 export function Play(): JSX.Element {
     const field = useGameSelector(selectFieldConfigs);

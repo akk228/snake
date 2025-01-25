@@ -1,4 +1,4 @@
-import { SubmitButton } from "../../GlobalElements/UI/Buttons/SubmitButton";
+import { SubmitButton } from "../../../GlobalElements/UI/Buttons/SubmitButton";
 import { FieldConfigs } from "./GameConfigs/FieldConfigs";
 import { LevelConfigs } from "./GameConfigs/LevelConfigs";
 

@@ -13,15 +13,21 @@ interface IIntroProps {
  * @returns 
  */
 export function Intro(props: IIntroProps): JSX.Element {
-    if (props.gameStarted) return <></>;
-    
-    const onStart = () => props.onGameStartedChange(true);
+    const onStart = () => props.onGameStartedChange(!props.gameStarted);
 
+    if (props.gameStarted) {
+        return (<SubmitButton
+            text={"Go!"}
+            onClick={onStart}
+        />);
+    }
+    
     return (
         <>
             <SubmitButton
                 text={"Go!"}
-                onClick={onStart} />
+                onClick={onStart}
+            />
             <FieldConfigs />
             <LevelConfigs />
         </>

@@ -1,0 +1,19 @@
+.cellStyle {
+    width: 30px; /* Fixed width */
+    height: 30px; /* Fixed height */
+    /* display: block; */
+    justify-content: center;
+    /* align-items: center; */
+    color: white; /* Text color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Optional: rounded corners */
+    text-align: center; /* Center text horizontally */
+    font-size: 14px; /* Font size */
+    /* cursor: pointer; /* Pointer on hover */
+    box-sizing: border-box; /* Prevent content from overflowing */
+  }
+  
+  .cellStyle:hover {
+    background-color: #45a049; /* Darker shade on hover */
+  }
+  

@@ -3,6 +3,7 @@ import { Intro } from './Game/Components/Intro/Intro';
 import { Provider } from 'react-redux';
 import { gameStore } from './Game/Redux/GameStore';
 import { Play } from './Game/Components/Play/Play';
+import { snakeStore } from './Game/Components/Play/Redux/SnakeStore';
 
 
 function App() {
@@ -15,7 +16,10 @@ function App() {
         gameStarted={gameStarted}
         onGameStartedChange={setGameStarted}
       />
-      <Play started={gameStarted} onGameStartedChange={setGameStarted}/>
+        <Play
+          started={gameStarted}
+          onGameStartedChange={setGameStarted}
+        />
     </Provider>
   );
 }

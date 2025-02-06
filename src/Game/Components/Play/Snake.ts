@@ -1,8 +1,9 @@
 import { IFieldParameters, initialState } from "../../Entities/Field";
 import { Direction, Directions } from "./Components/Entities/Direction";
 
-const X = 0;
-const Y = 1;
+export const X = 0;
+export const Y = 1;
+
 
 interface Head {
     x: number;

@@ -6,9 +6,22 @@ interface ICellProps {
 }
 
 export const Cell = memo( (props: ICellProps): JSX.Element => {
-    const color = props.type === CellType.SnakeHead ? `red` : `yellow` ;
+    const setColor = (cellType: CellType): string => {
+        switch (cellType) {
+            case CellType.SnakeHead:
+                return 'red';
+            case CellType.SnakeBody:
+                return 'green';
+            case CellType.Empty:
+                return 'yellow';
+            default:
+                return 'yellow';
+        }
+    }
+
+
     return <button
                 className="cellStyle"
-                style={{ backgroundColor: color}}
+                style={{ backgroundColor: setColor(props.type)}}
             ></button>;
 })

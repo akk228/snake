@@ -24,13 +24,10 @@ export function Play(props: IPlayProps): JSX.Element {
             if (event.code === "Space") {
                 props.onGameStartedChange(!props.started);
             }
-
-            
             if (event.code.startsWith("Arrow")) {
-                const direction = event.code.substring("Arrow".length) as Direction;
                 dispatchSnake({
                     type: "snake/changeDirection",
-                    payload: direction
+                    payload: event.code.substring("Arrow".length) as Direction
                 });
             }
         })
@@ -41,19 +38,20 @@ export function Play(props: IPlayProps): JSX.Element {
     }
 
     useEffect(() => {
-            if (props.started) {
-                const gameClock = setInterval(() => dispatchSnake({ type: "snake/move"}), Speed[difficulty]);
-                
-                setUpControlls();
+            if (!props.started) {
+                return;
+            }
 
-                return () => {
-                    clearInterval(gameClock);
-                    removeControls();
-                };
+            const gameClock = setInterval(() => dispatchSnake({ type: "snake/move"}), Speed[difficulty]);
+            setUpControlls();
+
+            return () => {
+                clearInterval(gameClock);
+                removeControls();
             };
         },
         [props.started]
     );
 
-    return (<Field x={snake.head.x} y={snake.head.y}/> );
+    return (<Field snake={snake}/> );
 }

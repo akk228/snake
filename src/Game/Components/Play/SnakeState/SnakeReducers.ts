@@ -6,6 +6,12 @@ interface SnakePayload {
     payload?: any;
 }
 
+/**
+ * Main reducer function for managing snake state
+ * @param state Current snake state
+ * @param action Action object containing type and optional payload
+ * @returns Updated snake state
+ */
 export function SnakeReducer(state: Snake, action: SnakePayload){
     switch (action.type) {
         case "snake/move" :
@@ -21,6 +27,13 @@ export function SnakeReducer(state: Snake, action: SnakePayload){
     return state;
 }
 
+/**
+ * Calculates the snake's new position based on its current direction
+ * Updates the snake's body by moving all segments forward
+ * Handles growth logic based on count (grows every 3 moves when count reaches 0)
+ * @param snake Current snake state
+ * @returns New snake state with updated position and body
+ */
 function MoveSnake(snake: Snake): Snake {
     const newHead: Head = {
         x: (snake.field.height + snake.head.x + Directions[snake.direction][X]) % snake.field.height,
@@ -57,6 +70,13 @@ function MoveSnake(snake: Snake): Snake {
     };
 }
 
+/**
+ * Updates the snake's direction if the new direction is valid
+ * Prevents 180-degree turns by checking if new direction is opposite to current
+ * @param snake Current snake state
+ * @param newDirection New direction to change to
+ * @returns Updated snake state with new direction or unchanged state if invalid
+ */
 function ChangeDirection(snake: Snake, newDirection: Direction): Snake {
     if (- Directions[snake.direction][X] === Directions[newDirection][X] ||
         - Directions[snake.direction][Y] === Directions[newDirection][Y]) {

@@ -1,16 +1,11 @@
 import { useGameSelector } from "../../Redux/GameHooks";
 import { selectDifficulty, selectFieldConfigs } from "../../Redux/GameSelectors";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { Field } from "./Components/Field";
-import { Direction } from "./Components/Entities/Direction";
+import { Directions, Direction } from "./Components/Entities/Direction";
 import { Speed } from "./Components/Entities/Speed";
 import { Level } from "../../Entities/Enums/Level";
-
-interface Head {
-    x:number;
-    y: number;
-    direction: number[];
-}
+import { snakeInitialState, SnakeReducer } from "./Snake";
 
 interface IPlayProps {
     started: boolean;
@@ -20,63 +15,45 @@ interface IPlayProps {
 export function Play(props: IPlayProps): JSX.Element {
     const field = useGameSelector(selectFieldConfigs);
     const difficulty = useGameSelector(selectDifficulty);
+    const snakeInitial = snakeInitialState(field.height, field.width);
 
-    const [ head, setHead] = useState<Head>(initialLocation(field.height, field.width));
-
-    const moveHead = () => {
-        setHead((head: Head) => ({
-            x: (field.height + head.x + head.direction[0]) % field.height,
-            y: (field.width + head.y + head.direction[1]) % field.width,
-            direction: head.direction
-        }));
-    }
-
+    const [ snake, dispatchSnake ] = useReducer(SnakeReducer, snakeInitial)
+    
     const setUpControlls = () => {
         document.addEventListener('keydown', (event: KeyboardEvent) => {
-            switch (event.code) {
-                case "Backspace" :
-                    props.onGameStartedChange(!props.started);
-                    break;
-                case "ArrowUp":
-                    setHead((head) => ({...head, direction: Direction.Up}));
-                    break;
-                case "ArrowDown":
-                    setHead((head) => ({...head, direction: Direction.Down}));
-                        break;
-                case "ArrowLeft":
-                    setHead((head) => ({...head, direction: Direction.Left}));
-                        break;
-                case "ArrowRight":
-                    setHead((head) => ({...head, direction: Direction.Right}));
-                    break;
-                default :
-                    break;
+            if (event.code === "Space") {
+                props.onGameStartedChange(!props.started);
+            }
+
+            
+            if (event.code.startsWith("Arrow")) {
+                const direction = event.code.substring("Arrow".length) as Direction;
+                dispatchSnake({
+                    type: "snake/changeDirection",
+                    payload: direction
+                });
             }
         })
     }
 
-    const deleteControls = () => {
+    const removeControls = () => {
         document.removeEventListener('keydown', ()=>{});
     }
 
     useEffect(() => {
             if (props.started) {
-                const gameClock = setInterval(moveHead, Speed[Level[difficulty]]);
+                const gameClock = setInterval(() => dispatchSnake({ type: "snake/move"}), Speed[difficulty]);
+                
                 setUpControlls();
+
                 return () => {
                     clearInterval(gameClock);
-                    deleteControls();
+                    removeControls();
                 };
             };
         },
         [props.started]
     );
 
-    return (<Field x={head.x} y={head.y}/> );
+    return (<Field x={snake.head.x} y={snake.head.y}/> );
 }
-
-const initialLocation = (height: number, width: number) => ({
-    x: Math.floor(Math.random()*((height))),
-    y: Math.floor(Math.random()*((width))),
-    direction: Direction.Up
-});

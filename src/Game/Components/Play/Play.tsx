@@ -1,11 +1,11 @@
 import { useGameSelector } from "../../Redux/GameHooks";
 import { selectDifficulty, selectFieldConfigs } from "../../Redux/GameSelectors";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { Field } from "./Components/Field";
-import { Directions, Direction } from "./Components/Entities/Direction";
 import { Speed } from "./Components/Entities/Speed";
-import { Level } from "../../Entities/Enums/Level";
-import { snakeInitialState, SnakeReducer } from "./Snake";
+import { snakeInitialState } from "./SnakeState/Snake";
+import { SnakeReducer } from "./SnakeState/SnakeReducers";
+import { Direction } from "./Components/Entities/Direction";
 
 interface IPlayProps {
     started: boolean;

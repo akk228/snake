@@ -1,7 +1,7 @@
 import { Direction, Directions } from "../Components/Entities/Direction";
 import { Snake, Head, X, Y } from "./Snake";
 
-interface SnakePayload {
+interface SnakeAction {
     type: string;
     payload?: any;
 }
@@ -12,19 +12,15 @@ interface SnakePayload {
  * @param action Action object containing type and optional payload
  * @returns Updated snake state
  */
-export function SnakeReducer(state: Snake, action: SnakePayload){
+export function SnakeReducer(state: Snake, action: SnakeAction){
     switch (action.type) {
-        case "snake/move" :
+        case "snake/move":
             return MoveSnake(state);
-        case "snake/changeDirection" :
+        case "snake/changeDirection":
             return ChangeDirection(state, action.payload);
-        case "snake/increaseLength" :
-            break;
         default:
-            break; 
+            return state;
     }
-
-    return state;
 }
 
 /**
@@ -48,9 +44,10 @@ function MoveSnake(snake: Snake): Snake {
         };
     }
 
-    const newBody = snake.count === 0 && snake.body.length > 0 
+    const newBody = snake.count === 0
         ? new Array(snake.body.length + 1)
         : new Array(snake.body.length);
+
 
     newBody[0] = [snake.head.x, snake.head.y];
 

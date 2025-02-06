@@ -19,6 +19,8 @@ export function Intro(props: IIntroProps): JSX.Element {
         return (<SubmitButton
             text={"Go!"}
             onClick={onStart}
+            tabIndex={-1}
+            className="go-button"
         />);
     }
     
@@ -27,6 +29,8 @@ export function Intro(props: IIntroProps): JSX.Element {
             <SubmitButton
                 text={"Go!"}
                 onClick={onStart}
+                tabIndex={-1}
+                className="go-button"
             />
             <FieldConfigs />
             <LevelConfigs />

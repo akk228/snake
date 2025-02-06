@@ -73,9 +73,15 @@ function MoveSnake(snake: Snake): Snake {
 
 }
 
-function ChangeDirection(snake: Snake, newDirection: Direction): Snake {    
+function ChangeDirection(snake: Snake, newDirection: Direction): Snake {
+    if (- Directions[snake.direction][X] === Directions[newDirection][X] ||
+        - Directions[snake.direction][Y] === Directions[newDirection][Y]) {
+        return snake;
+    }
+
     return {...snake, direction: newDirection};
 }
+
 
 export const snakeInitialState = (height: number, width: number) => ({
     direction: Direction.Up,

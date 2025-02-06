@@ -35,16 +35,18 @@ function MoveSnake(snake: Snake): Snake {
         };
     }
 
-    const newBody = new Array<number[]>();
+    const newBody = snake.count === 0 && snake.body.length > 0 
+        ? new Array(snake.body.length + 1)
+        : new Array(snake.body.length);
 
-    newBody.push([snake.head.x, snake.head.y]);
+    newBody[0] = [snake.head.x, snake.head.y];
 
     for (let i = 1; i < snake.body.length; i++) {
-        newBody.push([...snake.body[i - 1]]);
+        newBody[i] = [...snake.body[i - 1]];
     }
 
     if (snake.count === 0 && snake.body.length > 0) {
-        newBody.push([...snake.body[snake.body.length - 1]]);
+        newBody[newBody.length - 1] = [...snake.body[snake.body.length - 1]];
     }
 
     return {
@@ -53,7 +55,6 @@ function MoveSnake(snake: Snake): Snake {
         body: newBody,
         count: (snake.count + 1) % 3
     };
-
 }
 
 function ChangeDirection(snake: Snake, newDirection: Direction): Snake {

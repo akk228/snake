@@ -21,9 +21,14 @@ export function Play(props: IPlayProps): JSX.Element {
     
     const setUpControlls = () => {
         document.addEventListener('keydown', (event: KeyboardEvent) => {
+            if (event.code !== "Tab") {
+                event.preventDefault();
+            }
+
             if (event.code === "Space") {
                 props.onGameStartedChange(!props.started);
             }
+
             if (event.code.startsWith("Arrow")) {
                 dispatchSnake({
                     type: "snake/changeDirection",

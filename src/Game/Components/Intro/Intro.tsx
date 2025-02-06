@@ -1,6 +1,6 @@
 import { SubmitButton } from "../../../GlobalElements/UI/Buttons/SubmitButton";
-import { FieldConfigs } from "./GameConfigs/FieldConfigs";
-import { LevelConfigs } from "./GameConfigs/LevelConfigs";
+import { FieldConfigs } from "./Components/FieldConfigs";
+import { LevelConfigs } from "./Components/LevelConfigs";
 
 interface IIntroProps {
     gameStarted: boolean,

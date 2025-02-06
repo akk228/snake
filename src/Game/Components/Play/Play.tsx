@@ -18,7 +18,6 @@ export function Play(props: IPlayProps): JSX.Element {
     const snakeInitial = snakeInitialState(field.height, field.width);
     const [snake, dispatchSnake] = useReducer(SnakeReducer, snakeInitial);
 
-    // Define handler outside to properly remove it later
     const handleKeyDown = (event: KeyboardEvent) => {
         if (event.code !== "Tab") {
             event.preventDefault();
@@ -46,15 +45,13 @@ export function Play(props: IPlayProps): JSX.Element {
             Speed[difficulty]
         );
 
-        // Add event listener
         document.addEventListener('keydown', handleKeyDown);
 
-        // Cleanup function
         return () => {
             clearInterval(gameClock);
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [props.started]); // Keeping original dependency
+    }, [props.started]);
 
     return (<Field snake={snake} />);
 }

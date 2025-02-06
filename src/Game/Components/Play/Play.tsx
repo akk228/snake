@@ -16,47 +16,45 @@ export function Play(props: IPlayProps): JSX.Element {
     const field = useGameSelector(selectFieldConfigs);
     const difficulty = useGameSelector(selectDifficulty);
     const snakeInitial = snakeInitialState(field.height, field.width);
+    const [snake, dispatchSnake] = useReducer(SnakeReducer, snakeInitial);
 
-    const [ snake, dispatchSnake ] = useReducer(SnakeReducer, snakeInitial)
-    
-    const setUpControlls = () => {
-        document.addEventListener('keydown', (event: KeyboardEvent) => {
-            if (event.code !== "Tab") {
-                event.preventDefault();
-            }
+    // Define handler outside to properly remove it later
+    const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.code !== "Tab") {
+            event.preventDefault();
+        }
 
-            if (event.code === "Space") {
-                props.onGameStartedChange(!props.started);
-            }
+        if (event.code === "Space") {
+            props.onGameStartedChange(!props.started);
+        }
 
-            if (event.code.startsWith("Arrow")) {
-                dispatchSnake({
-                    type: "snake/changeDirection",
-                    payload: event.code.substring("Arrow".length) as Direction
-                });
-            }
-        })
-    }
-
-    const removeControls = () => {
-        document.removeEventListener('keydown', ()=>{});
-    }
+        if (event.code.startsWith("Arrow")) {
+            dispatchSnake({
+                type: "snake/changeDirection",
+                payload: event.code.substring("Arrow".length) as Direction
+            });
+        }
+    };
 
     useEffect(() => {
-            if (!props.started) {
-                return;
-            }
+        if (!props.started) {
+            return;
+        }
 
-            const gameClock = setInterval(() => dispatchSnake({ type: "snake/move"}), Speed[difficulty]);
-            setUpControlls();
+        const gameClock = setInterval(
+            () => dispatchSnake({ type: "snake/move" }), 
+            Speed[difficulty]
+        );
 
-            return () => {
-                clearInterval(gameClock);
-                removeControls();
-            };
-        },
-        [props.started]
-    );
+        // Add event listener
+        document.addEventListener('keydown', handleKeyDown);
 
-    return (<Field snake={snake}/> );
+        // Cleanup function
+        return () => {
+            clearInterval(gameClock);
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [props.started]); // Keeping original dependency
+
+    return (<Field snake={snake} />);
 }

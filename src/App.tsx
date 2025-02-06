@@ -14,10 +14,10 @@ function App() {
         gameStarted={gameStarted}
         onGameStartedChange={setGameStarted}
       />
-        <Play
-          started={gameStarted}
-          onGameStartedChange={setGameStarted}
-        />
+      <Play
+        started={gameStarted}
+        onGameStartedChange={setGameStarted}
+      />
     </Provider>
   );
 }

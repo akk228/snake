@@ -4,7 +4,7 @@ import { useEffect, useReducer } from "react";
 import { Field } from "./Components/Field";
 import { Speed } from "./Components/Entities/Speed";
 import { snakeInitialState } from "./SnakeState/Snake";
-import { SnakeReducer } from "./SnakeState/SnakeReducers";
+import { SnakeReducer, SnakeActionType } from "./SnakeState/SnakeReducers";
 import { Direction } from "./Components/Entities/Direction";
 
 interface IPlayProps {
@@ -29,7 +29,7 @@ export function Play(props: IPlayProps): JSX.Element {
 
         if (event.code.startsWith("Arrow")) {
             dispatchSnake({
-                type: "snake/changeDirection",
+                type: SnakeActionType.ChangeDirection,
                 payload: event.code.substring("Arrow".length) as Direction
             });
         }
@@ -41,7 +41,7 @@ export function Play(props: IPlayProps): JSX.Element {
         }
 
         const gameClock = setInterval(
-            () => dispatchSnake({ type: "snake/move" }), 
+            () => dispatchSnake({ type: SnakeActionType.Move }), 
             Speed[difficulty]
         );
 

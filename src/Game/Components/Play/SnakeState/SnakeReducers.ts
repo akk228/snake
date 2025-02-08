@@ -1,8 +1,13 @@
 import { Direction, Directions } from "../Components/Entities/Direction";
 import { Snake, Head, X, Y } from "./Snake";
 
+export enum SnakeActionType {
+    Move = "snake/move",
+    ChangeDirection = "snake/changeDirection"
+}
+
 interface SnakeAction {
-    type: string;
+    type: SnakeActionType;
     payload?: any;
 }
 
@@ -14,9 +19,9 @@ interface SnakeAction {
  */
 export function SnakeReducer(state: Snake, action: SnakeAction){
     switch (action.type) {
-        case "snake/move":
+        case SnakeActionType.Move:
             return MoveSnake(state);
-        case "snake/changeDirection":
+        case SnakeActionType.ChangeDirection:
             return ChangeDirection(state, action.payload);
         default:
             return state;

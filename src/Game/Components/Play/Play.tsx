@@ -42,7 +42,7 @@ export function Play(props: IPlayProps): JSX.Element {
     };
 
     useEffect(() => {
-        if (!props.started) {
+        if (!props.started || !snake.isAlive) {
             return;
         }
 
@@ -79,7 +79,7 @@ export function Play(props: IPlayProps): JSX.Element {
             document.removeEventListener('keydown', handleKeyDown);
             directionQueue.current = [];
         };
-    }, [snake.isMoving]);
+    }, [snake.isMoving, snake.isAlive]);
 
     return (<Field snake={snake} />);
 }

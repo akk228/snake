@@ -70,7 +70,10 @@ export function Play(props: IPlayProps): JSX.Element {
                 }
                 lastTime = timestamp;
             }
-            frameId = requestAnimationFrame(gameLoop);
+            
+            if (snake.isMoving && snake.isAlive) {
+                frameId = requestAnimationFrame(gameLoop);
+            }
         };
 
         frameId = requestAnimationFrame(gameLoop);

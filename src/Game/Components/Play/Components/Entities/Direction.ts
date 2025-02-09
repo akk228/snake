@@ -1,5 +1,3 @@
-import { Level } from "../../../../Entities/Enums/Level";
-
 export enum Direction {
     Up = "Up",
     Down = "Down",

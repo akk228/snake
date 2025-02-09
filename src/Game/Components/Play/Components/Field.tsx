@@ -3,7 +3,7 @@ import { useGameSelector } from "../../../Redux/GameHooks";
 import { selectFieldConfigs } from "../../../Redux/GameSelectors";
 import { CellType } from "../Entities/CellType";
 import { Cell } from "./Cell";
-import { Snake, X, Y } from "../SnakeState/Snake";
+import { Snake } from "../SnakeState/Snake";
 
 
 interface IFieldProps {

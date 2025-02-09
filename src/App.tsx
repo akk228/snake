@@ -14,10 +14,11 @@ function App() {
         gameStarted={gameStarted}
         onGameStartedChange={setGameStarted}
       />
+      {gameStarted && 
       <Play
         started={gameStarted}
         onGameStartedChange={setGameStarted}
-      />
+      />}
     </Provider>
   );
 }

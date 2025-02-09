@@ -1,12 +1,13 @@
 import { useGameSelector } from "../../Redux/GameHooks";
 import { selectDifficulty, selectFieldConfigs } from "../../Redux/GameSelectors";
-import { useEffect, useReducer, useRef } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import { Field } from "./Components/Field";
 import { Speed } from "./Components/Entities/Speed";
 import { snakeInitialState } from "./SnakeState/Snake";
 import { SnakeReducer, SnakeActionType } from "./SnakeState/SnakeReducers";
 import { Direction } from "./Components/Entities/Direction";
 import { DeathScreen } from "./Components/DeathScreen";
+import { KeyCode } from "./Components/Entities/GameEnums";
 
 interface IPlayProps {
     started: boolean;
@@ -20,37 +21,38 @@ export function Play(props: IPlayProps): JSX.Element {
     const [snake, dispatchSnake] = useReducer(SnakeReducer, snakeInitial);
     const directionQueue = useRef<Direction[]>([]);
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.code !== "Tab") {
-            event.preventDefault();
-        }
-
-        if (event.code === "Space") {
-            handleGamePersumePause();
-        }
-
-        if (snake.isMoving && event.code.startsWith("Arrow")) {
-            const newDirection = event.code.substring("Arrow".length) as Direction;
-            directionQueue.current.push(newDirection);
-        }
-    };
-
-    const handleGamePersumePause = () => {
+    const handleGameResumePause = (isMoving: boolean) => {
         dispatchSnake({
             type: SnakeActionType.SetIsMoving,
-            payload: !snake.isMoving
+            payload: isMoving
         });
     };
 
-    useEffect(() => {
-        if (!props.started || !snake.isAlive) {
-            return;
+    const handleKeyDown = useCallback((event: KeyboardEvent) => {
+        if (event.code !== KeyCode.Tab) {
+            event.preventDefault();
         }
 
+        if (event.code === KeyCode.Space) {
+            handleGameResumePause(!snake.isMoving);
+        }
+
+        if (snake.isMoving && event.code.startsWith(KeyCode.ArrowPrefix)) {
+            const newDirection = event.code.substring(KeyCode.ArrowPrefix.length) as Direction;
+            directionQueue.current.push(newDirection);
+        }
+    }, [snake.isMoving]);
+
+    useEffect(() => {
         document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [handleKeyDown]);
 
 
-        if (!snake.isMoving) {
+    useEffect(() => {
+        if (!props.started || !snake.isAlive || !snake.isMoving) {
             return;
         }
 
@@ -71,19 +73,15 @@ export function Play(props: IPlayProps): JSX.Element {
                 lastTime = timestamp;
             }
             
-            if (snake.isMoving && snake.isAlive) {
-                frameId = requestAnimationFrame(gameLoop);
-            }
+            frameId = requestAnimationFrame(gameLoop);
         };
 
         frameId = requestAnimationFrame(gameLoop);
 
         return () => {
             cancelAnimationFrame(frameId);
-            document.removeEventListener('keydown', handleKeyDown);
-            directionQueue.current = [];
         };
-    }, [snake.isMoving, snake.isAlive]);
+    }, [props.started, snake.isMoving, snake.isAlive, difficulty]);
 
     return (<>
         <Field snake={snake} />

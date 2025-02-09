@@ -1,6 +1,6 @@
 import { useGameSelector } from "../../Redux/GameHooks";
 import { selectDifficulty, selectFieldConfigs } from "../../Redux/GameSelectors";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import { Field } from "./Components/Field";
 import { Speed } from "./Components/Entities/Speed";
 import { snakeInitialState } from "./SnakeState/Snake";
@@ -17,6 +17,7 @@ export function Play(props: IPlayProps): JSX.Element {
     const difficulty = useGameSelector(selectDifficulty);
     const snakeInitial = snakeInitialState(field.height, field.width);
     const [snake, dispatchSnake] = useReducer(SnakeReducer, snakeInitial);
+    const directionQueue = useRef<Direction[]>([]);
 
     const handleKeyDown = (event: KeyboardEvent) => {
         if (event.code !== "Tab") {
@@ -24,15 +25,20 @@ export function Play(props: IPlayProps): JSX.Element {
         }
 
         if (event.code === "Space") {
-            props.onGameStartedChange(!props.started);
+            handleGamePersumePause();
         }
 
-        if (event.code.startsWith("Arrow")) {
-            dispatchSnake({
-                type: SnakeActionType.ChangeDirection,
-                payload: event.code.substring("Arrow".length) as Direction
-            });
+        if (snake.isMoving && event.code.startsWith("Arrow")) {
+            const newDirection = event.code.substring("Arrow".length) as Direction;
+            directionQueue.current.push(newDirection);
         }
+    };
+
+    const handleGamePersumePause = () => {
+        dispatchSnake({
+            type: SnakeActionType.SetIsMoving,
+            payload: !snake.isMoving
+        });
     };
 
     useEffect(() => {
@@ -40,18 +46,40 @@ export function Play(props: IPlayProps): JSX.Element {
             return;
         }
 
-        const gameClock = setInterval(
-            () => dispatchSnake({ type: SnakeActionType.Move }), 
-            Speed[difficulty]
-        );
-
         document.addEventListener('keydown', handleKeyDown);
 
-        return () => {
-            clearInterval(gameClock);
-            document.removeEventListener('keydown', handleKeyDown);
+
+        if (!snake.isMoving) {
+            return;
+        }
+
+        let frameId: number;
+        let lastTime = 0;
+        const interval = Speed[difficulty];
+
+        const gameLoop = (timestamp: number) => {
+            if (timestamp - lastTime >= interval) {
+                const currentDirections = [...directionQueue.current];
+                dispatchSnake({ 
+                    type: SnakeActionType.Move, 
+                    payload: currentDirections 
+                });
+                if (directionQueue.current.length > 0) {
+                    directionQueue.current.shift();
+                }
+                lastTime = timestamp;
+            }
+            frameId = requestAnimationFrame(gameLoop);
         };
-    }, [props.started]);
+
+        frameId = requestAnimationFrame(gameLoop);
+
+        return () => {
+            cancelAnimationFrame(frameId);
+            document.removeEventListener('keydown', handleKeyDown);
+            directionQueue.current = [];
+        };
+    }, [snake.isMoving]);
 
     return (<Field snake={snake} />);
 }

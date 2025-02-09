@@ -16,20 +16,23 @@ export interface Snake {
     body: number[][];
     field: IFieldParameters;
     count: number;
+    isMoving: boolean;
+    isAlive: boolean;
 }
 
-export const snakeInitialState = (height: number, width: number) => ({
-    direction: Direction.Up,
-    head: initializeHead(height, width),
-    body: new Array<number[]>(),
-    field: {
-        height: height,
-        width: width
-    },
-    count: 1
-});
+export function snakeInitialState(height: number, width: number): Snake {
+    return {
+        direction: Direction.Up,
+        head: initializeHead(height, width),
+        body: [],
+        field: { height, width },
+        count: 1,
+        isMoving: true,
+        isAlive: true
+    };
+}
 
-const initializeHead = (height: number, width: number) => ({
-    x: Math.floor(Math.random()*((height))),
-    y: Math.floor(Math.random()*((width)))
+const initializeHead = (height: number, width: number): Head => ({
+    x: Math.floor(Math.random() * height),
+    y: Math.floor(Math.random() * width)
 });

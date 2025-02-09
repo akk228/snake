@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useGameSelector } from "../../../Redux/GameHooks";
 import { selectFieldConfigs } from "../../../Redux/GameSelectors";
 import { CellType } from "../Entities/CellType";
@@ -13,36 +14,42 @@ interface IFieldProps {
 
 export function Field(props: IFieldProps): JSX.Element {
     const fieldConfigs = useGameSelector(selectFieldConfigs);
-    const field = initializeField(fieldConfigs.height, fieldConfigs.width, props.snake)
-        .map((rowOfCells: CellType[], rowIndex: number) => (
-            <div key={rowIndex} style={{margin: 0}}>
-                {rowOfCells.map((cell: CellType, colIndex: number) => <Cell key={colIndex} type={cell} />)}
-            </div>));
+    
+    const field = useMemo(() => {
+        const initialField = initializeField(fieldConfigs.height, fieldConfigs.width, props.snake);
+        return initialField.flat().map((cell: CellType, index: number) => (
+            <Cell 
+                key={index} 
+                type={cell} 
+            />
+        ));
+    }, [fieldConfigs.height, fieldConfigs.width, props.snake]);
 
     return (
-        <div style={{margin: 0, position: "fixed"}}>
+        <div style={{
+            margin: 0, 
+            position: "fixed",
+            display: "grid",
+            gridTemplateColumns: `repeat(${fieldConfigs.width}, 1fr)`,
+            gap: 0
+        }}>
             {field}
         </div>
     );
 }
 
 function initializeField(rows: number, cols: number, snake: Snake) {
-    const array: CellType[][] = [];
+    // Create empty field with typed array for better performance
+    const array = new Array(rows).fill(null)
+        .map(() => new Array(cols).fill(CellType.Empty));
 
-    for (let i = 0; i < rows; i++) {
-        array[i] = [];
+    // Fill snake body cells directly
+    snake.body.forEach(([x, y]) => {
+        array[x][y] = CellType.SnakeBody;
+    });
 
-        for (let j = 0; j < cols; j++) {
-            array[i][j] = CellType.Empty;
-        }
-    }
-
+    // Set snake head
     array[snake.head.x][snake.head.y] = CellType.SnakeHead;
 
-    for (let i = 0; i < snake.body.length; i++) {
-        array[snake.body[i][X]][snake.body[i][Y]] = CellType.SnakeBody;
-    }
-
     return array;
-
 }

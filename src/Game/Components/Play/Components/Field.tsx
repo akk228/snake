@@ -27,13 +27,19 @@ export function Field(props: IFieldProps): JSX.Element {
 
     return (
         <div style={{
-            margin: 0, 
-            position: "fixed",
-            display: "grid",
-            gridTemplateColumns: `repeat(${fieldConfigs.width}, 1fr)`,
-            gap: 0
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
         }}>
-            {field}
+            <div style={{
+                margin: 0,
+                display: 'grid',
+                gridTemplateColumns: `repeat(${fieldConfigs.width}, 1fr)`,
+                gap: 0
+            }}>
+                {field}
+            </div>
         </div>
     );
 }

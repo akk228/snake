@@ -6,6 +6,7 @@ import { Speed } from "./Components/Entities/Speed";
 import { snakeInitialState } from "./SnakeState/Snake";
 import { SnakeReducer, SnakeActionType } from "./SnakeState/SnakeReducers";
 import { Direction } from "./Components/Entities/Direction";
+import { DeathScreen } from "./Components/DeathScreen";
 
 interface IPlayProps {
     started: boolean;
@@ -81,5 +82,9 @@ export function Play(props: IPlayProps): JSX.Element {
         };
     }, [snake.isMoving, snake.isAlive]);
 
-    return (<Field snake={snake} />);
+    return (<>
+        <Field snake={snake} />
+        {!snake.isAlive &&
+        <DeathScreen onGameRestart={() => props.onGameStartedChange(false)} />}
+    </>);
 }

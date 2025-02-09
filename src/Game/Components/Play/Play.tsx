@@ -43,6 +43,7 @@ export function Play(props: IPlayProps): JSX.Element {
         }
     }, [snake.isMoving]);
 
+    // Handles keyboard events
     useEffect(() => {
         document.addEventListener('keydown', handleKeyDown);
         return () => {
@@ -50,7 +51,7 @@ export function Play(props: IPlayProps): JSX.Element {
         };
     }, [handleKeyDown]);
 
-
+    // Handles snake movement
     useEffect(() => {
         if (!props.started || !snake.isAlive || !snake.isMoving) {
             return;

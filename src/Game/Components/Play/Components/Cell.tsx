@@ -1,11 +1,12 @@
 import { memo } from "react";
 import { CellType } from "../Entities/CellType";
 import './Styles/Cell.css'
+
 interface ICellProps {
-    type: number;
+    type: CellType;
 }
 
-export const Cell = memo( (props: ICellProps): JSX.Element => {
+export const Cell = memo(function Cell({ type }: ICellProps): JSX.Element {
     const setColor = (cellType: CellType): string => {
         switch (cellType) {
             case CellType.SnakeHead:
@@ -19,9 +20,8 @@ export const Cell = memo( (props: ICellProps): JSX.Element => {
         }
     }
 
-
     return <button
                 className="cellStyle"
-                style={{ backgroundColor: setColor(props.type)}}
+                style={{ backgroundColor: setColor(type)}}
             ></button>;
-})
+});

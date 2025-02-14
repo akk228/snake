@@ -1,9 +1,10 @@
 import { Direction, Directions } from "../Components/Entities/Direction";
-import { Snake, Head, X, Y } from "./Snake";
+import { Snake, Head, X, Y, Coordinates,  } from "./Snake";
 
 export enum SnakeActionType {
     Move = "snake/move",
-    SetIsMoving = "snake/setIsMoving"
+    SetIsMoving = "snake/setIsMoving",
+    AddObstacle = "snake/addObstacle"
 }
 
 interface MoveAction {
@@ -13,10 +14,13 @@ interface MoveAction {
 
 interface SetIsMovingAction {
     type: SnakeActionType.SetIsMoving;
-    payload?: boolean;
 }
 
-type SnakeAction = MoveAction | SetIsMovingAction;
+interface AddObstacleAction {
+    type: SnakeActionType.AddObstacle;
+}
+
+type SnakeAction = MoveAction | SetIsMovingAction | AddObstacleAction;
 
 /**
  * Main reducer function for managing snake state
@@ -30,19 +34,23 @@ export function SnakeReducer(state: Snake, action: SnakeAction) {
             return MoveSnake(state, action.payload || []);
         case SnakeActionType.SetIsMoving:
             return SetSnakeMoving(state);
+        case SnakeActionType.AddObstacle:
+            return AddObstacle(state);
         default:
             return state;
     }
 }
 
 /**
- * Checks if snake's head collides with any part of its body
+ * Checks if snake's head collides with any part of its body or an obstacle
  * @param head Current position of snake's head
  * @param body Array of body segment coordinates
+ * @param obstacles Array of obstacle coordinates
  * @returns true if collision detected, false otherwise
  */
-function checkCollision(head: Head, body: number[][]): boolean {
-    return body.some(([x, y]) => head.x === x && head.y === y);
+function checkCollision(head: Head, body: number[][], obstacles: Coordinates[]): boolean {
+    return body.some(([x, y]) => head.x === x && head.y === y) ||
+           obstacles.some(obstacle => head.x === obstacle.x && head.y === obstacle.y);
 }
 
 /**
@@ -72,8 +80,8 @@ function MoveSnake(snake: Snake, directionQueue: Direction[]): Snake {
         y: (snake.field.width + snake.head.y + Directions[newDirection][Y]) % snake.field.width
     }
 
-    // Check for collision with body
-    if (checkCollision(newHead, snake.body)) {
+    // Check for collision with body or obstacles
+    if (checkCollision(newHead, snake.body, snake.obstacles)) {
         return {
             ...snake,
             isAlive: false,
@@ -124,4 +132,48 @@ function SetSnakeMoving(snake: Snake): Snake {
         ...snake,
         isMoving: !snake.isMoving
     };
+}
+
+/**
+ * Adds a new obstacle to the snake's field
+ * @param state Current snake state
+ * @param obstacle Coordinates of the new obstacle
+ * @returns Updated snake state with the new obstacle added
+ */
+function AddObstacle(state: Snake): Snake {
+    
+    const obstacle: Coordinates = {
+        x: Math.floor(Math.random() * state.field.height),
+        y: Math.floor(Math.random() * state.field.width)
+    };
+
+    return checkHeadCollision(state.head, state.direction, obstacle) || checkBodyCollision(obstacle, state.body) ?
+        state :
+        {
+            ...state,
+            obstacles: [...state.obstacles, obstacle]
+        };
+}
+
+/**
+ * Checks if the obstacle can be created given the location of the head and where it's moving.
+ * Namely, obstacle can't be created in the place of a Head or in the place where the Head is moving.
+ * @param head Current position of snake's head
+ * @param direction Current direction of the snake
+ * @param obstacle Coordinates of the obstacle
+ * @returns true if collision detected, false otherwise
+ */
+function checkHeadCollision(head: Head, direction: Direction, obstacle: Coordinates): boolean {
+    return (head.x === obstacle.x && head.y === obstacle.y) || 
+        (head.x + Directions[direction][X] === obstacle.x && head.y + Directions[direction][Y] === obstacle.y);
+}
+
+/**
+ * Checks if the obstacle collides with any part of the snake's body
+ * @param obstacle Coordinates of the obstacle
+ * @param body Array of body segment coordinates
+ * @returns true if collision detected, false otherwise
+ */
+function checkBodyCollision(obstacle: Coordinates, body: number[][]): boolean {
+    return body.some(([x, y]) => obstacle.x === x && obstacle.y === y);
 }

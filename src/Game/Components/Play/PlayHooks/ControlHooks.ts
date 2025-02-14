@@ -53,7 +53,9 @@ export function useGameLoop(
         const interval = Speed[difficulty];
 
         const gameLoop = (timestamp: number) => {
-            if (timestamp - lastTime >= interval) {
+            const delta = timestamp - lastTime;
+
+            if (delta >= interval) {
                 const currentDirections = [...directionQueue.current];
                 dispatchSnake({ 
                     type: SnakeActionType.Move, 
@@ -65,6 +67,10 @@ export function useGameLoop(
                 lastTime = timestamp;
             }
             
+            if (delta > 3*interval) {
+                dispatchSnake({ type: SnakeActionType.AddObstacle})
+            }
+
             frameId = requestAnimationFrame(gameLoop);
         };
 

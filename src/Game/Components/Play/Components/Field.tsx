@@ -49,6 +49,11 @@ function initializeField(rows: number, cols: number, snake: Snake) {
     const array = new Array(rows).fill(null)
         .map(() => new Array(cols).fill(CellType.Empty));
 
+    // Fill obstacles
+    snake.obstacles.forEach(({x, y}) => {
+        array[x][y] = CellType.Obstacle;
+    });
+
     // Fill snake body cells directly
     snake.body.forEach(([x, y]) => {
         array[x][y] = CellType.SnakeBody;

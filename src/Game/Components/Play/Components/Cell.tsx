@@ -15,6 +15,8 @@ export const Cell = memo(function Cell({ type }: ICellProps): JSX.Element {
                 return 'green';
             case CellType.Empty:
                 return 'yellow';
+            case CellType.Obstacle:
+                return 'brown';
             default:
                 return 'yellow';
         }

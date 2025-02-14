@@ -14,6 +14,7 @@ export interface Snake {
     direction: Direction;
     head: Head;
     body: number[][];
+    obstacles: Coordinates[];
     field: IFieldParameters;
     count: number;
     isMoving: boolean;
@@ -25,6 +26,7 @@ export function snakeInitialState(height: number, width: number): Snake {
         direction: Direction.Up,
         head: initializeHead(height, width),
         body: [],
+        obstacles: [],
         field: { height, width },
         count: 1,
         isMoving: true,
@@ -36,3 +38,8 @@ const initializeHead = (height: number, width: number): Head => ({
     x: Math.floor(Math.random() * height),
     y: Math.floor(Math.random() * width)
 });
+
+export interface Coordinates {
+    x: number;
+    y: number;
+}

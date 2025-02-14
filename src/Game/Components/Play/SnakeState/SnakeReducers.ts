@@ -29,7 +29,7 @@ export function SnakeReducer(state: Snake, action: SnakeAction) {
         case SnakeActionType.Move:
             return MoveSnake(state, action.payload || []);
         case SnakeActionType.SetIsMoving:
-            return SetSnakeMoving(state, action.payload || false);
+            return SetSnakeMoving(state);
         default:
             return state;
     }
@@ -119,9 +119,9 @@ function MoveSnake(snake: Snake, directionQueue: Direction[]): Snake {
  * @param isMoving New movement state
  * @returns Updated snake state with new movement state
  */
-function SetSnakeMoving(snake: Snake, isMoving: boolean): Snake {
+function SetSnakeMoving(snake: Snake): Snake {
     return {
         ...snake,
-        isMoving: isMoving || false
+        isMoving: !snake.isMoving
     };
 }

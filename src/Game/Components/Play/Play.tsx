@@ -8,6 +8,7 @@ import { SnakeReducer, SnakeActionType } from "./SnakeState/SnakeReducers";
 import { Direction } from "./Components/Entities/Direction";
 import { DeathScreen } from "./Components/DeathScreen";
 import { KeyCode } from "./Components/Entities/GameEnums";
+import { usePauseResume } from "./PlayHooks/ControllHooks";
 
 interface IPlayProps {
     started: boolean;
@@ -20,38 +21,29 @@ export function Play(props: IPlayProps): JSX.Element {
     const snakeInitial = snakeInitialState(field.height, field.width);
     const [snake, dispatchSnake] = useReducer(SnakeReducer, snakeInitial);
     const directionQueue = useRef<Direction[]>([]);
-
-    const handleGameResumePause = (isMoving: boolean) => {
-        dispatchSnake({
-            type: SnakeActionType.SetIsMoving,
-            payload: isMoving
-        });
-    };
+    const pauseResume = useCallback(() => dispatchSnake({type: SnakeActionType.SetIsMoving}), []);
+    usePauseResume(pauseResume, (props.started && snake.isAlive));
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        if (event.code !== KeyCode.Tab) {
-            event.preventDefault();
+        if (!(snake.isMoving && event.code.startsWith(KeyCode.ArrowPrefix))) {
+            return;
         }
 
-        if (event.code === KeyCode.Space) {
-            handleGameResumePause(!snake.isMoving);
-        }
+        const newDirection = event.code.substring(KeyCode.ArrowPrefix.length) as Direction;
+        directionQueue.current.push(newDirection);
+    }, [snake.isMoving]);    
 
-        if (snake.isMoving && event.code.startsWith(KeyCode.ArrowPrefix)) {
-            const newDirection = event.code.substring(KeyCode.ArrowPrefix.length) as Direction;
-            directionQueue.current.push(newDirection);
-        }
-    }, [snake.isMoving]);
-
-    // Handles keyboard events
+    // attach direction keys
     useEffect(() => {
-        document.addEventListener('keydown', handleKeyDown);
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [handleKeyDown]);
+        if (!props.started || !snake.isAlive) {
+            return;
+        }
 
-    // Handles snake movement
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [handleKeyDown, props.started, snake.isAlive]);
+
+    // game loop
     useEffect(() => {
         if (!props.started || !snake.isAlive || !snake.isMoving) {
             return;

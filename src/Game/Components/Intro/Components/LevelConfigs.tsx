@@ -6,7 +6,11 @@ import { Levels } from "../../../Entities/Constants/Levels";
 import { IRadioValue, RadioButton } from "../../../../GlobalElements/UI/Inputs/RadioButton";
 
 export function LevelConfigs(): JSX.Element {
+    const dispatch = useGameDispatch();
     const gameLevel = useGameSelector(selectDifficulty);
+
+    const onLevelChange = (level: Level) => dispatch(changeDifficulty(level));
+    
     const levels: IRadioValue[] = Levels.map((level: Level): IRadioValue => ({
         label: { 
             text: Level[level],
@@ -14,8 +18,6 @@ export function LevelConfigs(): JSX.Element {
         },
         value: level
     }));
-    const dispatch = useGameDispatch();
-    const onLevelChange = (level: Level) => dispatch(changeDifficulty(level));
 
     return <RadioButton
                 selected={gameLevel}

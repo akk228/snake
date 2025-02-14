@@ -25,29 +25,21 @@ export function Play(props: IPlayProps): JSX.Element {
     usePauseResume(pauseResume, (props.started && snake.isAlive));
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        if (!(snake.isMoving && event.code.startsWith(KeyCode.ArrowPrefix))) {
+        if (!(event.code.startsWith(KeyCode.ArrowPrefix))) {
             return;
         }
 
         const newDirection = event.code.substring(KeyCode.ArrowPrefix.length) as Direction;
         directionQueue.current.push(newDirection);
-    }, [snake.isMoving]);    
-
-    // attach direction keys
-    useEffect(() => {
-        if (!props.started || !snake.isAlive) {
-            return;
-        }
-
-        document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [handleKeyDown, props.started, snake.isAlive]);
+    },[]);
 
     // game loop
     useEffect(() => {
         if (!props.started || !snake.isAlive || !snake.isMoving) {
             return;
         }
+
+        document.addEventListener('keydown', handleKeyDown);
 
         let frameId: number;
         let lastTime = 0;
@@ -73,6 +65,7 @@ export function Play(props: IPlayProps): JSX.Element {
 
         return () => {
             cancelAnimationFrame(frameId);
+            document.removeEventListener('keydown', handleKeyDown);
         };
     }, [props.started, snake.isMoving, snake.isAlive, difficulty]);
 

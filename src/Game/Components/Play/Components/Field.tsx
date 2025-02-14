@@ -7,7 +7,6 @@ import { Snake } from "../SnakeState/Snake";
 
 
 interface IFieldProps {
-
     snake: Snake;
 }
 

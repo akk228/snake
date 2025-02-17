@@ -20,7 +20,7 @@ interface AddObstacleAction {
     type: SnakeActionType.AddObstacle;
 }
 
-type SnakeAction = MoveAction | SetIsMovingAction | AddObstacleAction;
+export type SnakeAction = MoveAction | SetIsMovingAction | AddObstacleAction;
 
 /**
  * Main reducer function for managing snake state
@@ -141,21 +141,27 @@ function SetSnakeMoving(snake: Snake): Snake {
  * @returns Updated snake state with the new obstacle added
  */
 function AddObstacle(state: Snake): Snake {
-    const allowedCells = new Array<Coordinates>();
+    const allowedCellsCount = state.field.height * state.field.width - state.body.length - state.obstacles.length - 1;
+    const newObstacle = allowedCellsCount > 1 ? Math.floor(Math.random() * allowedCellsCount) : 1;
+    const fieldMockUp = new Array(state.field.height).fill(null).map(() => new Array(state.field.width).fill(0));
 
+    state.body.forEach(([x, y]) => fieldMockUp[x][y] = 1);
+    state.obstacles.forEach(({ x, y }) => fieldMockUp[x][y] = 1);
+    fieldMockUp[state.head.x][state.head.y] = 1;
+    fieldMockUp[state.head.x + Directions[state.direction][X]][state.head.y + Directions[state.direction][Y]] = 1;
+
+    let count = 0;
     for (let i = 0; i < state.field.height; i++) {
         for (let j = 0; j < state.field.width; j++) {
-            if (i == state.head.x && j == state.head.y) continue;
-            if (state.body.some(([x, y]) => x == i && y == j)) continue;
-            if (state.obstacles.some(obstacle => obstacle.x == i && obstacle.y == j)) continue;
+            if (checkHeadCollision(state.head, state.direction, { x: i, y: j })) continue;
+            if (state.body.some(([x, y]) => x === i && y === j)) continue;
+            if (state.obstacles.some(obstacle => obstacle.x === i && obstacle.y === j)) continue;
             allowedCells.push({ x: i, y: j });
         }
     }
-
-    const newObstacle = Math.floor(Math.random() * allowedCells.length);
     
     return {
-            ...state,
+            ...state,   
             obstacles: [...state.obstacles, allowedCells[newObstacle]]
         };
 }

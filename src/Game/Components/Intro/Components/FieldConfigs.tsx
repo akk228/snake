@@ -3,12 +3,16 @@ import { changeHeight, changeWidth } from "../../../Redux/GameSlice";
 import { selectFieldConfigs } from "../../../Redux/GameSelectors";
 import { NumberInput } from "../../../../GlobalElements/UI/Inputs/NumberInput";
 
+interface IFieldConfigsProps {
+    cssWrapper?: string; 
+}
+
 /**
  * Input form for field configurations
  * @param props 
  * @returns 
  */
-export function FieldConfigs(): JSX.Element {
+export function FieldConfigs(props: IFieldConfigsProps): JSX.Element {
     const disaptch = useGameDispatch();
     const fieldConfigs = useGameSelector(selectFieldConfigs);
 
@@ -16,7 +20,7 @@ export function FieldConfigs(): JSX.Element {
     const onWidthChange = (width: number) => disaptch(changeWidth(width));
 
     return (
-        <>
+        <div className={props.cssWrapper}>
             <NumberInput
                 label="Height"
                 value={fieldConfigs.height}
@@ -27,6 +31,6 @@ export function FieldConfigs(): JSX.Element {
                 value={fieldConfigs.width}
                 onChange={onWidthChange}
             />
-        </>
+        </div>
     );
 }

@@ -1,18 +1,21 @@
-interface IStartButtonProps {
+import React from 'react';
+import styles from './SubmitButton.module.css';
+
+interface ISubmitButtonProps {
     text: string;
-    cssWrapper?: string;
     onClick: () => void;
-    className?: string;
     tabIndex?: number;
+    className?: string;
 }
 
-export function SubmitButton(props: IStartButtonProps): JSX.Element {
-    return <button 
-                type="button" 
-                onClick={props.onClick}
-                className={props?.cssWrapper}
-                tabIndex={props.tabIndex}
-            >
-                {props.text}
-            </button>;
+export function SubmitButton(props: ISubmitButtonProps): JSX.Element {
+    return (
+        <button
+            className={`${styles.submitButton} ${props.className}`}
+            onClick={props.onClick}
+            tabIndex={props.tabIndex}
+        >
+            {props.text}
+        </button>
+    );
 }

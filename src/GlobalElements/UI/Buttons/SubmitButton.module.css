@@ -1,0 +1,15 @@
+.submitButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: black;
+    color: green;
+    border: 2px solid green;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.submitButton:hover {
+    background-color: green;
+    color: black;
+}

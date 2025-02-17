@@ -4,6 +4,7 @@ import { selectDifficulty } from "../../../Redux/GameSelectors";
 import { changeDifficulty } from "../../../Redux/GameSlice";
 import { Levels } from "../../../Entities/Constants/Levels";
 import { IRadioValue, RadioButton } from "../../../../GlobalElements/UI/Inputs/RadioButton";
+import styles from '../Intro.module.css';
 
 export function LevelConfigs(): JSX.Element {
     const dispatch = useGameDispatch();
@@ -20,6 +21,7 @@ export function LevelConfigs(): JSX.Element {
     }));
 
     return <RadioButton
+                cssWrapper={styles.levelConfigs}
                 selected={gameLevel}
                 values={levels}
                 onChange={onLevelChange}

@@ -65,11 +65,10 @@ export function useGameLoop(
                     directionQueue.current.shift();
                 }
                 lastTime = timestamp;
-            }
-            
-            if (delta > 3*interval) {
-                dispatchSnake({ type: SnakeActionType.AddObstacle})
-            }
+            } //else if (delta >= 3*interval) {
+            //     dispatchSnake({ type: SnakeActionType.AddObstacle});
+            //     lastTime = timestamp;
+            // }
 
             frameId = requestAnimationFrame(gameLoop);
         };

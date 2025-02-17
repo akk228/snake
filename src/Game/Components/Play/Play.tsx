@@ -6,7 +6,7 @@ import { snakeInitialState } from "./SnakeState/Snake";
 import { SnakeReducer, SnakeActionType } from "./SnakeState/SnakeReducers";
 import { Direction } from "./Components/Entities/Direction";
 import { DeathScreen } from "./Components/DeathScreen";
-import { usePauseResume, useGameLoop } from "./PlayHooks/ControlHooks";
+import { usePauseResume, useGameLoop, useCreateObstacle } from "./PlayHooks/ControlHooks";
 
 interface IPlayProps {
     started: boolean;
@@ -23,6 +23,7 @@ export function Play(props: IPlayProps): JSX.Element {
 
     usePauseResume(pauseResume, (props.started && snake.isAlive));
     useGameLoop(props.started && snake.isAlive, snake.isMoving, difficulty, directionQueue, dispatchSnake);
+    useCreateObstacle(props.started && snake.isAlive, snake.isMoving, difficulty, dispatchSnake);
 
     return (<>
         <Field snake={snake} />

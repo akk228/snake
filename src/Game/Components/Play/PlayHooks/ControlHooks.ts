@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { KeyCode } from "../Components/Entities/GameEnums";
 import { Speed } from "../Components/Entities/Speed";
-import { SnakeActionType } from "../SnakeState/SnakeReducers";
+import { SnakeAction, SnakeActionType } from "../SnakeState/SnakeReducers";
 import { Direction } from "../Components/Entities/Direction";
 import { Level } from "../../../Entities/Enums/Level";
 
@@ -30,7 +30,7 @@ export function useGameLoop(
     isMoving: boolean,
     difficulty: Level,
     directionQueue: React.MutableRefObject<Direction[]>,
-    dispatchSnake: React.Dispatch<any>
+    dispatchSnake: React.Dispatch<SnakeAction>
 ) {
     useEffect(() => {
         if (!gameOn || !isMoving) {
@@ -65,10 +65,7 @@ export function useGameLoop(
                     directionQueue.current.shift();
                 }
                 lastTime = timestamp;
-            } //else if (delta >= 3*interval) {
-            //     dispatchSnake({ type: SnakeActionType.AddObstacle});
-            //     lastTime = timestamp;
-            // }
+            }
 
             frameId = requestAnimationFrame(gameLoop);
         };
@@ -80,4 +77,27 @@ export function useGameLoop(
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, [gameOn, isMoving, difficulty, directionQueue, dispatchSnake]);
+}
+
+export function useCreateObstacle (
+    gameOn: boolean,
+    isMoving: boolean,
+    difficulty: Level,
+    dispatchSnake: React.Dispatch<SnakeAction>
+) {
+    useEffect(() => {
+        if (!gameOn || !isMoving) {
+            return;
+        }
+
+        const interval = Speed[difficulty] * 3;
+
+        const createObstacle = () => {
+            dispatchSnake({ type: SnakeActionType.AddObstacle });
+        };
+
+        const intervalId = setInterval(createObstacle, interval);
+
+        return () => clearInterval(intervalId);
+    }, [gameOn, isMoving, difficulty, dispatchSnake]);
 }

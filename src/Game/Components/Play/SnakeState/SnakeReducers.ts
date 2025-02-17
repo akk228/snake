@@ -137,33 +137,34 @@ function SetSnakeMoving(snake: Snake): Snake {
 /**
  * Adds a new obstacle to the snake's field
  * @param state Current snake state
- * @param obstacle Coordinates of the new obstacle
  * @returns Updated snake state with the new obstacle added
  */
 function AddObstacle(state: Snake): Snake {
-    const allowedCellsCount = state.field.height * state.field.width - state.body.length - state.obstacles.length - 1;
-    const newObstacle = allowedCellsCount > 1 ? Math.floor(Math.random() * allowedCellsCount) : 1;
-    const fieldMockUp = new Array(state.field.height).fill(null).map(() => new Array(state.field.width).fill(0));
+    const obstacle = generateNewObstacle(state);
 
-    state.body.forEach(([x, y]) => fieldMockUp[x][y] = 1);
-    state.obstacles.forEach(({ x, y }) => fieldMockUp[x][y] = 1);
-    fieldMockUp[state.head.x][state.head.y] = 1;
-    fieldMockUp[state.head.x + Directions[state.direction][X]][state.head.y + Directions[state.direction][Y]] = 1;
-
-    let count = 0;
-    for (let i = 0; i < state.field.height; i++) {
-        for (let j = 0; j < state.field.width; j++) {
-            if (checkHeadCollision(state.head, state.direction, { x: i, y: j })) continue;
-            if (state.body.some(([x, y]) => x === i && y === j)) continue;
-            if (state.obstacles.some(obstacle => obstacle.x === i && obstacle.y === j)) continue;
-            allowedCells.push({ x: i, y: j });
-        }
+    if (checkHeadCollision(state.head, state.direction, obstacle) || 
+        checkBodyCollision(obstacle, state.body) || 
+        checkObstacleCollision(obstacle, state.obstacles))
+    {
+        return state;
     }
-    
+
     return {
             ...state,   
-            obstacles: [...state.obstacles, allowedCells[newObstacle]]
+            obstacles: [...state.obstacles, obstacle]
         };
+}
+
+/**
+ * Generates a new obstacle at a random position
+ * @param state Current snake state
+ * @returns Coordinates of the new obstacle
+ */
+function generateNewObstacle(state: Snake): Coordinates {
+    return {
+        x: Math.floor(Math.random() * state.field.height),
+        y: Math.floor(Math.random() * state.field.width)
+    };
 }
 
 /**
@@ -187,4 +188,14 @@ function checkHeadCollision(head: Head, direction: Direction, obstacle: Coordina
  */
 function checkBodyCollision(obstacle: Coordinates, body: number[][]): boolean {
     return body.some(([x, y]) => obstacle.x === x && obstacle.y === y);
+}
+
+/**
+ * Checks if the obstacle collides with any existing obstacles
+ * @param obstacle Coordinates of the new obstacle
+ * @param obstacles Array of existing obstacle coordinates
+ * @returns true if collision detected, false otherwise
+ */
+function checkObstacleCollision(obstacle: Coordinates, obstacles: Coordinates[]): boolean {
+    return obstacles.some(o => o.x === obstacle.x && o.y === obstacle.y);
 }

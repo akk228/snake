@@ -141,17 +141,22 @@ function SetSnakeMoving(snake: Snake): Snake {
  * @returns Updated snake state with the new obstacle added
  */
 function AddObstacle(state: Snake): Snake {
-    
-    const obstacle: Coordinates = {
-        x: Math.floor(Math.random() * state.field.height),
-        y: Math.floor(Math.random() * state.field.width)
-    };
+    const allowedCells = new Array<Coordinates>();
 
-    return checkHeadCollision(state.head, state.direction, obstacle) || checkBodyCollision(obstacle, state.body) ?
-        state :
-        {
+    for (let i = 0; i < state.field.height; i++) {
+        for (let j = 0; j < state.field.width; j++) {
+            if (i == state.head.x && j == state.head.y) continue;
+            if (state.body.some(([x, y]) => x == i && y == j)) continue;
+            if (state.obstacles.some(obstacle => obstacle.x == i && obstacle.y == j)) continue;
+            allowedCells.push({ x: i, y: j });
+        }
+    }
+
+    const newObstacle = Math.floor(Math.random() * allowedCells.length);
+    
+    return {
             ...state,
-            obstacles: [...state.obstacles, obstacle]
+            obstacles: [...state.obstacles, allowedCells[newObstacle]]
         };
 }
 

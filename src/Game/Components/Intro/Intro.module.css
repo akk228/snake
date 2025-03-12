@@ -11,10 +11,12 @@
     color: green;
     width: 300px;
     height: 300px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    top: 100%;
+    left: 50%; 
+    /* bottom: 50%;
+    right: 50%;*/
+    transform: translate(-50%, 0%); 
 }
 
 .goButton {
